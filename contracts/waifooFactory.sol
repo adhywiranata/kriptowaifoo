@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.17;
 
 contract CharacterFactory {
 
@@ -42,5 +42,10 @@ contract CharacterFactory {
 
     function characterOwnership(uint characterId) public view returns (address) {
         return characterToOwner[characterId];
+    }
+
+    function getCharacter(uint characterId) public view returns (uint id, string name, string anime, string avatarUrl, uint value) {
+        Character memory targetCharacter = characters[characterId];
+        return (characterId, targetCharacter.name, targetCharacter.anime, targetCharacter.avatarUrl, targetCharacter.value);
     }
 }
