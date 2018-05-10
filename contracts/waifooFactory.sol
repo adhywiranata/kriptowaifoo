@@ -17,14 +17,17 @@ contract CharacterFactory {
 
     constructor() public {
         creator = msg.sender;
-        createCharacter("Jeanne D'arc", "Fate Apocrypha", "");
-        createCharacter("Rem", "Re:Zero", "");
-        createCharacter("Megumin", "Konosuba", "");
     }
 
     modifier onlyCreator() {
         require(msg.sender == creator);
         _;
+    }
+
+    function seedCharacters() private {
+        createCharacter("Jeanne D'arc", "Fate Apocrypha", "https://vignette.wikia.nocookie.net/fategrandorder/images/5/56/Jeanne1.png");
+        createCharacter("Rem", "Re:Zero", "https://coubsecure-s.akamaihd.net/get/b9/p/coub/simple/cw_timeline_pic/ff85dc2cb2c/0775f4b5d6c283d2064ad/med_1470218917_image.jpg");
+        createCharacter("Megumin", "Konosuba", "https://www.nautiljon.com/images/perso/00/30/megumin_13903.jpg?1501512323");
     }
 
     function createCharacter(string name, string anime, string avatarUrl) public onlyCreator {
