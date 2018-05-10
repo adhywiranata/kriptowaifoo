@@ -9,7 +9,7 @@ contract CharacterFactory {
         string name;
         string anime;
         string avatarUrl;
-        uint currentValue;
+        uint value;
     }
 
     Character[] public characters;
@@ -17,6 +17,9 @@ contract CharacterFactory {
 
     constructor() public {
         creator = msg.sender;
+        createCharacter("Jeanne D'arc", "Fate Apocrypha", "");
+        createCharacter("Rem", "Re:Zero", "");
+        createCharacter("Megumin", "Konosuba", "");
     }
 
     modifier onlyCreator() {
@@ -27,5 +30,17 @@ contract CharacterFactory {
     function createCharacter(string name, string anime, string avatarUrl) public onlyCreator {
         uint characterId = characters.push(Character(name, anime, avatarUrl, minimumCharValue)) - 1;
         characterToOwner[characterId] = msg.sender;
+    }
+
+    function buyCharacter(uint characterId) public payable {
+        require(msg.value > characters[characterId].value);
+        
+        // change character ownership and update value
+        characterToOwner[characterId] = msg.sender;
+        characters[characterId].value = msg.value;
+    }
+
+    function characterOwnership(uint characterId) public view returns (address) {
+        return characterToOwner[characterId];
     }
 }
