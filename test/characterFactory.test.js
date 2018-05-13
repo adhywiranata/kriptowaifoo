@@ -23,4 +23,40 @@ describe('Character Factory contract', () => {
   it('deploys a character factory', () => {
     assert.ok(characterFactory.options.address);
   });
+
+  it('seeds three new characters on contract creation', async () => {
+    const charactersLength = await characterFactory.methods.getCharactersLength().call({ from: accounts[0] });
+    assert.equal(charactersLength, 3);
+  });
+
+  it('creates new character (contract creator only)', async () => {
+    await characterFactory.methods.createCharacter("test", "test", "test").call({ from: accounts[0] });
+    const charactersLength = await characterFactory.methods.getCharactersLength().call({ from: accounts[0] });
+    assert.equal(charactersLength, 4);
+  });
+
+  it('get a character using its index (id)', async () => {
+    const characterIndex = 0;
+    const expectedCharacter = {
+      name: 'Jeanne D\'arc',
+      anime: 'Fate Apocrypha',
+      avatarUrl: 'https://vignette.wikia.nocookie.net/fategrandorder/images/5/56/Jeanne1.png',
+      value: '5000000000000000',
+    };
+    const actualCharacter = await characterFactory.methods
+      .getCharacter(characterIndex).call({ from: accounts[0] });
+    
+    assert.equal(expectedCharacter.name, actualCharacter.name);
+    assert.equal(expectedCharacter.anime, actualCharacter.anime);
+    assert.equal(expectedCharacter.avatarUrl, actualCharacter.avatarUrl);
+    assert.equal(expectedCharacter.value, actualCharacter.value);
+  });
+
+  it('get a character\'s owner address', async () => {
+    const characterIndex = 0;
+    const ownerAddress = await characterFactory.methods
+      .characterOwnership(characterIndex).call({ from: accounts[0] });
+
+    assert.equal(ownerAddress, accounts[0]);
+  });
 });

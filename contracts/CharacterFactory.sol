@@ -52,4 +52,8 @@ contract CharacterFactory {
         Character memory targetCharacter = characters[characterId];
         return (characterId, targetCharacter.name, targetCharacter.anime, targetCharacter.avatarUrl, targetCharacter.value);
     }
+
+    function getCharactersLength() public view returns (uint length) {
+        return characters.length;
+    }
 }
