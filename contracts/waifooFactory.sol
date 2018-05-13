@@ -17,6 +17,7 @@ contract CharacterFactory {
 
     constructor() public {
         creator = msg.sender;
+        seedCharacters();
     }
 
     modifier onlyCreator() {
