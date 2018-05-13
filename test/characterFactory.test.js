@@ -25,13 +25,19 @@ describe('Character Factory contract', () => {
   });
 
   it('seeds three new characters on contract creation', async () => {
-    const charactersLength = await characterFactory.methods.getCharactersLength().call({ from: accounts[0] });
+    const charactersLength = await characterFactory.methods
+      .getCharactersLength()
+      .call({ from: accounts[0] });
     assert.equal(charactersLength, 3);
   });
 
   it('creates new character (contract creator only)', async () => {
-    await characterFactory.methods.createCharacter("test", "test", "test").call({ from: accounts[0] });
-    const charactersLength = await characterFactory.methods.getCharactersLength().call({ from: accounts[0] });
+    await characterFactory.methods
+      .createCharacter("test", "test", "test")
+      .call({ from: accounts[0] });
+    const charactersLength = await characterFactory.methods
+      .getCharactersLength()
+      .call({ from: accounts[0] });
     assert.equal(charactersLength, 4);
   });
 
@@ -44,7 +50,8 @@ describe('Character Factory contract', () => {
       value: '5000000000000000',
     };
     const actualCharacter = await characterFactory.methods
-      .getCharacter(characterIndex).call({ from: accounts[0] });
+      .getCharacter(characterIndex)
+      .call({ from: accounts[0] });
     
     assert.equal(expectedCharacter.name, actualCharacter.name);
     assert.equal(expectedCharacter.anime, actualCharacter.anime);
@@ -55,8 +62,24 @@ describe('Character Factory contract', () => {
   it('get a character\'s owner address', async () => {
     const characterIndex = 0;
     const ownerAddress = await characterFactory.methods
-      .characterOwnership(characterIndex).call({ from: accounts[0] });
+      .characterOwnership(characterIndex)
+      .call({ from: accounts[0] });
 
     assert.equal(ownerAddress, accounts[0]);
+  });
+
+  it('successfully buy a character', async () => {
+    const characterIndex = 0;
+    await characterFactory.methods
+      .buyCharacter(characterIndex)
+      .send({
+        from: accounts[1],
+        value: web3.utils.toWei('0.08', 'ether'),
+      });
+    const ownerAddress = await characterFactory.methods
+      .characterOwnership(characterIndex)
+      .call({ from: accounts[1] });
+  
+      assert.equal(ownerAddress, accounts[1]);
   });
 });
